@@ -7,7 +7,7 @@ from src.schemas.user import MessageResponse, UserCreate,UserResponse
 from src.core.database import SessionLocal
 from src.schemas.user import LoginRequest, LoginResponse,ForgotPasswordRequest, ResetPasswordRequest, MessageResponse
 from src.models.user import User
-from src.crud.password import create_reset_token, reset_password
+from src.crud.forgot_password import create_reset_token, reset_password
 
 
 router=APIRouter(prefix="/users" ,tags=["Users"])
