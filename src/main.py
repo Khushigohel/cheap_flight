@@ -8,3 +8,4 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(user_routes.router)
 app.include_router(google_auth_routes.router)
+app.include_router(user_routes.router)
