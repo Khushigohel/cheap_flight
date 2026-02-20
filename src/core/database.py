@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-<<<<<<< HEAD
+
 Base=declarative_base()
 
 def get_db():
@@ -18,7 +18,7 @@ def get_db():
         yield db
     finally:
         db.close()
-=======
+
 DATABASE_URL = "postgresql://postgres:password@localhost:5433/db"
 
 if not DATABASE_URL:
@@ -28,5 +28,3 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
-
->>>>>>> a576c29 (Initial commit)
