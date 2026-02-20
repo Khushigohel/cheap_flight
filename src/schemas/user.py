@@ -1,4 +1,7 @@
 from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from datetime import datetime
+
 
 class UserCreate(BaseModel):
     name: str
@@ -12,3 +15,23 @@ class UserResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        from_attributes = True
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class LoginResponse(BaseModel):
+    message: str
+    user_id: int
+    email: EmailStr
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+class MessageResponse(BaseModel):
+    message: str

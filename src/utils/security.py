@@ -13,6 +13,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 def hash_password(password:str):
     return pwd_context.hash(password)
+<<<<<<< HEAD
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -23,3 +24,12 @@ def create_access_token(data: dict):
 
 
 
+=======
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+>>>>>>> a576c29 (Initial commit)
