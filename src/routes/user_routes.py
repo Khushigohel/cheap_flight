@@ -35,7 +35,11 @@ def registration(user:UserCreate,db:Session = Depends(get_db)):
     otp_code = generate_otp()
     expiry = datetime.utcnow() + timedelta(minutes=5)
     
-    otp_entry = Emailotp(email=new_user.email, otp=otp_code, expires_at=expiry)
+    db.query(Emailotp).filter(
+        Emailotp.user_id == new_user.user_id).delete()
+    db.commit()
+    
+    otp_entry = Emailotp(user_id=new_user.user_id, otp=otp_code, expires_at=expiry)
     db.add(otp_entry)
     db.commit()
     send_otp_email(new_user.email, otp_code) 
@@ -45,8 +49,12 @@ def registration(user:UserCreate,db:Session = Depends(get_db)):
 @router.post("/verify-email")
 def verify_email(email: str, otp: str, db: Session = Depends(get_db)):
 
+    user=db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404,detail="User not found into db please try again later")
     record = db.query(Emailotp).filter(
-        Emailotp.email == email,
+        Emailotp.user_id == user.user_id,
+         Emailotp.otp == otp,
         Emailotp.verified == False
     ).first()
 
@@ -66,6 +74,35 @@ def verify_email(email: str, otp: str, db: Session = Depends(get_db)):
 
     db.commit()
     return {"message": "Email verified successfully"}
+
+# resend otp by email
+@router.post("/resend-otp")
+def resend_otp(email: str, db: Session = Depends(get_db)):
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    otp_code = generate_otp()
+    expiry = datetime.utcnow() + timedelta(minutes=5)
+
+    # delete old OTP
+    db.query(Emailotp).filter(
+        Emailotp.user_id == user.user_id
+    ).delete()
+
+    new_otp = Emailotp(
+        user_id=user.user_id,
+        otp=otp_code,
+        expires_at=expiry
+    )
+
+    db.add(new_otp)
+    db.commit()
+
+    send_otp_email(user.email, otp_code)
+
+    return {"message": "OTP resent successfully"}
 
 # login api
 @router.post("/login", response_model=LoginResponse)
