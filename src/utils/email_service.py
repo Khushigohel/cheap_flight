@@ -18,6 +18,7 @@ def send_otp_email(to_email, otp):
     message["Subject"] = "Verify Your Email - Cheap Flight Destination"
     message["From"] = EMAIL_USER
     message["To"] = to_email
+    OTP_EXPIRY_MINUTES = 5
 
     html_content = f"""
     <html>
@@ -32,8 +33,9 @@ def send_otp_email(to_email, otp):
                 <p>Your One-Time Password (OTP) is:</p>
 
                 <h1 style="color: #28a745; letter-spacing: 5px;">{otp}</h1>
+                <p>This OTP is valid for {OTP_EXPIRY_MINUTES} minutes.
 
-                <p>Please use this OTP to complete your registration process.</p>
+                <p>Please use this OTP to complete your Email Verification process.</p>
                 <p style="color: red;">Do not share this code with anyone.</p>
 
                 <p>Thank you for using <strong>Cheap Flight Destination ✈️</strong></p>
