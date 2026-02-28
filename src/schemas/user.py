@@ -24,6 +24,7 @@ class LoginResponse(BaseModel):
     message: str
     user_id: int
     email: EmailStr
+    access_token: str
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr

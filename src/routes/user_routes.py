@@ -14,6 +14,7 @@ from src.models.emailotp import Emailotp
 from src.schemas.user import LoginRequest, LoginResponse,ForgotPasswordRequest,ResetPasswordRequest, MessageResponse
 from src.models.user import User
 from src.crud.forgot_password import create_reset_token, reset_password
+from src.utils.security import create_access_token
 
 router=APIRouter(prefix="/users" ,tags=["Users"])
 
@@ -114,10 +115,13 @@ def login_user(payload: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
+    access_token = create_access_token({"user_id": user.user_id})
+
     return {
         "message": "Login successful",
         "user_id": user.user_id,
-        "email": user.email
+        "email": user.email,
+        "access_token": access_token
     }
 
 # forgot password api
